@@ -62,12 +62,12 @@ class TestBooksCollector:
         assert collector.get_books_genre() == {}
 
     def test_get_book_genre_added_book(self, genre):
-        genre.get_book_genre(BOOK_TITLE)
-        assert genre.books_genre.get(BOOK_TITLE) == BOOK_GENRE
+        result = genre.get_book_genre(BOOK_TITLE)
+        assert result == BOOK_GENRE
 
     def test_get_book_genre_not_added_book(self, collector):
-        collector.get_book_genre('Поселок')
-        assert  collector.books_genre.get('Поселок') == None
+        result = collector.get_book_genre('Поселок')
+        assert  result == None
 
     def test_get_books_with_specific_genre_set_genre_to_added_book(self, collector, sorted_books_by_genre):
         books_with_specific_genre = collector.get_books_with_specific_genre('Фантастика')
@@ -79,6 +79,14 @@ class TestBooksCollector:
     def test_get_books_with_specific_genre_not_available_genre(self, collector, sorted_books_by_genre):
         books_with_specific_genre = collector.get_books_with_specific_genre('Фэнтези')
         assert books_with_specific_genre == []
+
+    def test_get_books_genre_add_book_and_set_genre(self, genre):
+        result = genre.get_books_genre()
+        assert result == {BOOK_TITLE:BOOK_GENRE}
+
+    def test_get_books_genre_empty_value(self, collector):
+        result = collector.get_books_genre()
+        assert result == {}
 
     @pytest.mark.parametrize(
         'name, genre',
@@ -112,8 +120,7 @@ class TestBooksCollector:
     def test_add_book_in_favorites_add_book_from_book_genre(self, book):
         book.add_book_in_favorites(BOOK_TITLE)
         favorites = book.get_list_of_favorites_books()
-        book_count_favorites = len(favorites)
-        assert book_count_favorites == 1
+        assert favorites == [BOOK_TITLE]
 
     def test_add_book_in_favorites_add_added_book(self, book):
         book.add_book_in_favorites(BOOK_TITLE)
@@ -128,4 +135,13 @@ class TestBooksCollector:
         favorites = book.get_list_of_favorites_books()
         book_count_favorites = len(favorites)
         assert book_count_favorites == 0
+
+    def test_get_list_of_favorites_books_add_book(self, book):
+        book.add_book_in_favorites(BOOK_TITLE)
+        result = book.get_list_of_favorites_books()
+        assert result == [BOOK_TITLE]
+
+    def test_get_list_of_favorites_books_empty_value(self, collector):
+        result = collector.get_list_of_favorites_books()
+        assert result == []
 
